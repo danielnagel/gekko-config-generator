@@ -6,8 +6,6 @@
  */
 
 const fs = require('fs');
-const pathToToml = './config/strategies/';
-const resultFile = 'my-config.js';
 
 function getFileExtension(file) {
   if (typeof file !== 'string') {
@@ -33,13 +31,14 @@ function isTOML(file) {
   return getFileExtension(file) === 'toml';
 }
 
-function buildJSONFromTOML(content) {
+function buildJSONFromToml(content) {
   let json = '{';
   let openingSubBracket = 0;
   content.forEach(line => {
     if (line.charAt(0).match(/[a-z]/i)) {
       // a variable
       line = line.replace(' =', ':');
+      while (line.indexOf('"') !== -1) line = line.replace('"', "'");
 
       let comment = line.indexOf('#');
       if (comment !== -1) {
@@ -97,43 +96,52 @@ function buildJSONFromTOML(content) {
     openingSubBracket--;
   }
 
-
   json += '}';
   return json;
 }
 
-if (!fs.existsSync(pathToToml)) {
-  console.error(`The path "${pathToToml} does not exist."`);
-  process.exit();
+function getTomlFilesAsJSONArray(pathToTomlFiles) {
+  if (!fs.existsSync(pathToTomlFiles)) {
+    console.error(`The path '${pathToTomlFiles}' does not exist.`);
+    return [];
+  }
+
+  const dirContent = fs.readdirSync(pathToTomlFiles);
+  if (dirContent.length < 0) {
+    console.error(`No toml Files found under '${pathToTomlFiles}'.`);
+  }
+
+  if (pathToTomlFiles.charAt(pathToTomlFiles.length - 1) !== '/') {
+    pathToTomlFiles += '/';
+  }
+
+  let jsonArray = [];
+
+  dirContent.forEach(file => {
+    if (isTOML(file)) {
+      const fileContent = fs.readFileSync(`${pathToTomlFiles}${file}`, {
+        encoding: 'utf-8',
+        flag: 'r',
+      });
+
+      let contentLines = '';
+      if (fileContent.indexOf('\r\n') !== -1) {
+        // File written under windows
+        contentLines = fileContent.split('\r\n');
+      } else {
+        // File written under unix like system
+        contentLines = fileContent.split('\n');
+      }
+
+      jsonArray.push(
+        `{ "strategyName": "${getFileName(
+          file
+        )}", "strategyConfig": "${buildJSONFromToml(contentLines)}"}`
+      );
+    }
+  });
+
+  return jsonArray;
 }
 
-const dirContent = fs.readdirSync(pathToToml);
-fs.writeFileSync(resultFile, '');
-
-dirContent.forEach(file => {
-  if (isTOML(file)) {
-    const fileContent = fs.readFileSync(`${pathToToml}${file}`, {
-      encoding: 'utf-8',
-      flag: 'r',
-    });
-
-    let contentLines = '';
-    if (fileContent.indexOf('\r\n') !== -1) {
-      // File written under windows
-      contentLines = fileContent.split('\r\n');
-    } else {
-      // File written under unix like system
-      contentLines = fileContent.split('\n');
-    }
-
-    let resultString = `config.${getFileName(file)} = ${buildJSONFromTOML(
-      contentLines
-    )}\n`;
-
-    try {
-      fs.appendFileSync(resultFile, resultString);
-    } catch (err) {
-      console.error(err);
-    }
-  }
-});
+module.exports = getTomlFilesAsJSONArray;
