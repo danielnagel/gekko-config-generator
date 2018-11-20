@@ -1,0 +1,20 @@
+{
+  "name": "gekko-config-generator",
+  "version": "0.1.0",
+  "description": "Creates a config.js for gekko backtest from the toml files in the strategies directory.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "gekko",
+    "toml",
+    "javascript",
+    "tool"
+  ],
+  "author": "Daniel Nagel",
+  "license": "ISC",
+  "dependencies": {
+    "toml": "^2.3.3"
+  }
+}

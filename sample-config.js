@@ -6,9 +6,9 @@ var config = {};
 config.debug = true;
 
 config.watch = {
-  exchange: 'binance',
-  currency: 'USDT',
-  asset: 'BTC',
+  exchange: 'poloniex',
+  currency: 'ETH',
+  asset: 'ZEC',
 }
 
 config.tradingAdvisor = {
@@ -188,7 +188,7 @@ config.sqlite = {
   path: 'plugins/sqlite',
   dataDirectory: 'history',
   version: 0.1,
-  journalMode: require('./web/isWindows.js') ? 'DELETE' : 'WAL',
+  journalMode: require('../web/isWindows.js') ? 'DELETE' : 'WAL',
   dependencies: []
 }
 

@@ -2,6 +2,7 @@
  * TODO:
  * command line arguments:
  *  - path to tomls
+ *  - exchange, currency, assets
  * [a welcome log]
  * move config file creation to extra file
  * make log class
@@ -61,7 +62,7 @@ function modifySampleConfig(strategyObj) {
         }
         configFileContent += line + "\n";
     });
-    configFileContent += `config.${strategyObj.strategyName} = ${strategyObj.strategyConfig}\n`;
+    configFileContent += `config.${strategyObj.strategyName} = ${JSON.stringify(strategyObj.strategyConfig)}\n`;
     
     return configFileContent;
 }
