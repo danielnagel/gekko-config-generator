@@ -5,8 +5,8 @@
  */
 
 const program = require("commander");
-const tomlToJson = require("./toml-to-json");
-const configGenerator = require("./config-generator");
+const tomlToJson = require("./lib/toml-to-json");
+const configGenerator = require("./lib/config-generator");
 const pathToToml = "config/strategies";
 const pathToConfigDir = "backtest-config";
 
