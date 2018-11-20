@@ -1,8 +1,8 @@
 {
   "name": "gekko-config-generator",
   "version": "0.3.0",
-  "description": "Creates a config.js for gekko backtest from the toml files in the strategies directory.",
-  "main": "index.js",
+  "description": "Creates a config.js, for gekko backtest, for every toml files in the strategies directory.",
+  "main": "gcg.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
